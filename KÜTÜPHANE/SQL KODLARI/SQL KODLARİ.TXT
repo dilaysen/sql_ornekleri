@@ -1,0 +1,106 @@
+#************************************************************** SQL KODLARI **************************************************************************#
+
+## AÇIKLAMA:Bu bölüm soru cevap şeklindedir elimizde kütüphaneler adında bir veri tabanı olup çalışma odaları , ekipmanlar , öğrenciler ve oda durumu
+########### olmak üzere de 4 adet tablomuz bulunmaktadır.
+
+
+#SORU 1:Ekipmanlarımız nelerdir birer defa listeleyiniz? 
+
+select distinct ekipmanlar.Ekipman_adi from ekipmanlar 
+
+#Burada distinct ifadesi ile ekipmanlar tablosunda belirtilen ekipman adı alanında bulunan kayıtlardan birer örnek alınır.
+# Yani tekrar eden kayıtlardan bir tane alınır.
+
+
+#SORU 2: Kütüphaneye gelen öğrencilerin hangi bölümlerde okuduğunu ve durumlarını birer defa alınız?
+
+select distinct ogrenciler.Bolum , ogrenciler.Ogr_Durum from ogrenciler 
+
+#Burada dikkat edilmesi gereken nokta örnek verecek olursak İktisat Bölümünü okuyan ve öğrenci durumu normal olan üç tane öğrencimiz bulunmaktadır ancak distinct
+#ifadesi ile üç alanın tek bir alanmış gibi değerlendirilmesidir.Diğer bir dikkat edilmesi gereken nokta ise Tıp alanının iki defa listelenmesidir sebebi ise
+# Öğrenci Durum bilgilerinin farklı olmasıdır.Yani bu iki alan benzersiz değildir.)
+
+
+#SORU 3: 17 Ekim 2021 tarihinde hangi odalar kiralanmıştır birer defa listeleyiniz?
+
+select distinct oda_durumu.Tarih , oda_durumu.Oda_No from oda_durumu where oda_durumu.Tarih = '2021-10-17'
+
+#Burada öncelikle select ifadesi ile Tarih ve Oda Numaraları alanlarında okuma işlemi yapacağımızı belirtirken from ifadesi ile Oda durumu tablosunda işlem yapacağımızı belirttik.
+#Sonrasında ise where koşulu ile tarih alanında işlem yapacağımız ve bu yapacağımız işlemi 17 Ekim 2021 tarihiyle kısıtlandıracağımızı belirttik.
+
+
+#SORU 4: Kütüphanede tıp okuyan özel durumdaki öğrencileri bölümleri ile birlikte listeleyiniz?
+
+select ogrenciler.Ad_Soyad , ogrenciler.Bolum from ogrenciler where ogrenciler.Bolum='Tıp' and ogrenciler.Ogr_Durum ='Özel'
+
+#Burada where ile birden fazla alanda işlem yaparken and kullanıldı. And birinci durumla beraber ikinci durumunda oldupu zaman kullanılır.
+
+
+#SORU 5: Kütüphanede kat1 veya kat2 de bulunan odaları listeleyiniz?
+
+select calisma_odalari.Oda_No from calisma_odalari where calisma_odalari.Oda_Kat='Kat 1' or calisma_odalari.Oda_Kat ='Kat 2'
+
+#Burada dikkat edileceği üzere or kullanılmıştır.Yani Oda Katları alanında Kat 1 veya Kat 2 olan kayıtlar seçilsin bu katlarda bulunan oda numaraları listelensin denilmiştir.
+
+
+#SORU : 6 İktisat Bölümü'nde okuyan öğrenciler hangi tarihlerde kütüphaneye gelmiştir ve hangi odaları kiralamışlardır?
+
+select ogrenciler.Ad_Soyad , oda_durumu.Tarih , oda_durumu.Oda_No from ogrenciler join oda_durumu on ogrenciler.Ogr_id = oda_durumu.Ogr_id where ogrenciler.Bolum = 'İktisat Bölümü' 
+
+# Join yapısı iki adet tablomuzdaki kayıtları belli bir kritere göre birleştirmek için kullanılır. Join ile Inner Join aynı işlemi yapmaktadır.
+#Burada görüleceği üzere from ifadesi ile birinci tablomuzu ardından join (veya inner join) ile birleştireceğimiz ikinci tablomuzu belirtmiş olduk.
+#On ile de hangi alanların eşitleneceği gösterilmektedir. Bu kodda iki tablonun id alanları eşitlenmiştir.
+#ID alanında ortak kayıtlar seçilecektir diğerleri dikkate alınmaz.Where ile de İktisat Bölümü okuyan öğrenciler kısıtlaması getirilmiştir.
+
+
+#SORU 7: 17 EKİM 2021 tarihinde kiralanan oda tipleri nelerdir birer defa listeleyiniz?
+
+select distinct oda_durumu.Tarih , oda_durumu.Oda_No , calisma_odalari.Oda_Durumu from calisma_odalari join oda_durumu on calisma_odalari.Oda_No=oda_durumu.Oda_No where oda_durumu.Tarih = '2021-10-17'
+
+
+
+#SORU 8 :15 Ekim 2021 tarihinde randevu saati 09:00 olan öğrencilerin ad,soyad ve bolum bilgilerini alfabetik sıraya göre listeleyiniz?
+
+select ogrenciler.Ad_Soyad , ogrenciler.Bolum from ogrenciler join oda_durumu on ogrenciler.Ogr_id = oda_durumu.Ogr_id where oda_durumu.Tarih = '2021-10-15' and  oda_durumu.Randevu_Saati= '09:08' order by ogrenciler.Ad_Soyad,ogrenciler.Bolum asc 
+
+#Yukarıda öncelikle iki tabloyu join yapısı ile birleştirmiş olup where ifadesi kullanarak tarih ve saati koşullandırmış olduk.Burada dikkat edilmesi gereken order by ifadesidir. 
+#Order by ifadesi belirtilen alanda kayıtların küçükten büyüğe veya büyükten küçüğe sıralar. ASC (Ascending) parametresi ile küçükten büyüğe , DESC (Descending) parametresi ile büyükten küçüğe göre sıralanır. 
+#Bu kod ile metinsel alanı alfabetik sıraya göre sıraladık.
+
+
+#SORU 9 : Kütüphaneye gelen öğrencilerimizden Cenay DESTAN adlı öğrencimizin bölümünü 'Görsel Sanatlar' olarak değiştiriniz?
+
+update ogrenciler set ogrenciler.Bolum = 'Görsel Sanatlar' where ogrenciler.Ogr_id = 10
+
+#öğrenciler adlı tablomuzda bulunan kayıtlarda where ifadesi ile ogr_id alanında 10 yazan kaydı seçmiş olduk.İlgili kaydın Bolum alanını Görsel Sanatlar olarak değiştirdik. 
+#Eğer Where ifadesi kullanmadan yapsaydık bütün kayıtları seçmiş olurduk ve bütün öğrenciler görsel sanatlar okuyor olurdu.
+
+
+#SORU 10:  Kütüphanede oda kiralayan hangi öğrenciler mühendislik okumaktadır?
+
+select ogrenciler.Ad_Soyad , ogrenciler.Bolum from ogrenciler where ogrenciler.Bolum like '%Mühendisliği%' order by ogrenciler.Ad_Soyad asc 
+
+#like operatörü tablomuzda bulunan kayıtlardan belirttiğimiz değere en çok benzeyenleri seçmek için kullanılır. Bir oparötör olduğu için de where ile kullanılır.
+#Burada like oparötörü Bölüm alanında herhangi bir yerinde (başında,ortasında veya sonunda) Mühendisliği kelimesini seçmiştir. 
+
+
+#SORU : Kütüphanede oda kiralayan hangi öğrenciler mühendislik okumamaktadır?
+
+select ogrenciler.Ad_Soyad , ogrenciler.Bolum from ogrenciler where ogrenciler.Bolum not like '%Mühendisliği%' order by ogrenciler.Bolum asc
+
+
+#SORU 11: 17 EKİM 2021 tarihinde randevu saati 09:00 olan hangi öğrencilerin adları B harfi ile başlamaktadır?
+
+select * from ogrenciler join oda_durumu on ogrenciler.Ogr_id = oda_durumu.Ogr_id where ogrenciler.Ad_Soyad like 'B%' and oda_durumu.Tarih = '2021-10-17' and oda_durumu.Randevu_Saati='09:00' 
+
+
+# SORU 12: 15 Ekim 2021 tarihinde 09:00 ile 12:00 saatleri arasında kütüphaneye gelen öğrenciler hangi odaları kiralamıştır?
+
+select * from oda_durumu where oda_durumu.Giris_Saati >= '09:00' and oda_durumu.Cikis_Saati<='12:00' and oda_durumu.Tarih ='2021-10-15'
+
+
+#SORU 13 : 14 - 15 Ekim tarihleri ve 09:00 ile 12:00 saatleri arasında oda kiralayan öğrencilerin kiraladıkları tarih,saat,oda numaraları ve ad,soyad bilgilerini listeleyiniz?
+
+select oda_durumu.Tarih , oda_durumu.Giris_Saati , oda_durumu.Cikis_Saati ,oda_durumu.Oda_No , ogrenciler.Ad_Soyad from ogrenciler join oda_durumu on ogrenciler.Ogr_id = oda_durumu.Ogr_id where oda_durumu.Tarih >='2021-10-14' and oda_durumu.Tarih <= '2021-10-15' and oda_durumu.Giris_Saati >= '09:00' and oda_durumu.Cikis_Saati<='12:00'
+
+
