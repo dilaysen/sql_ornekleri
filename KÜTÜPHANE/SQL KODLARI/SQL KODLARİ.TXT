@@ -104,3 +104,56 @@ select * from oda_durumu where oda_durumu.Giris_Saati >= '09:00' and oda_durumu.
 select oda_durumu.Tarih , oda_durumu.Giris_Saati , oda_durumu.Cikis_Saati ,oda_durumu.Oda_No , ogrenciler.Ad_Soyad from ogrenciler join oda_durumu on ogrenciler.Ogr_id = oda_durumu.Ogr_id where oda_durumu.Tarih >='2021-10-14' and oda_durumu.Tarih <= '2021-10-15' and oda_durumu.Giris_Saati >= '09:00' and oda_durumu.Cikis_Saati<='12:00'
 
 
+# SORU 14 : Kütüphaneye randevu alıpta gelmeyen öğrencilerin ad,soyad ve gelmedikleri tarihleri bilgilerini listeleyiniz?
+
+select distinct oda_durumu.Tarih, ogrenciler.Ad_Soyad from oda_durumu join ogrenciler on oda_durumu.Ogr_id=ogrenciler.Ogr_id where Giris_Saati is null 
+
+-- Burada is null operatörü ile giriş saati boş olan alanların listesini aldık. Tam tersi durumlarda ise is not null ifadesi kullanılmaktadır.
+
+# SORU : Randevu saatinde gelen ve gelmeyen öğrencileri listeleyiniz? (?????)
+
+select oda_durumu.Ogr_id,Giris_Saati=case when Giris_Saati is null  then 'Ogrenci randevu saatinde gelmemistir' else 'Ogrenci radevu saatinde gelmistir' end as ogrenci_durum_bilgisi from oda_durumu 
+
+
+# SORU 15: Kütüphanede bulunan her bir ekipmanın değerini hesaplayınız.Ad ve fiyat bilgilerini listeleyiniz?
+
+select ekipmanlar.Ekipman_adi , sum (ekipmanlar.Ekipman_Adedi*ekipmanlar.Ekipman_Fiyatlari) as kutuphanedeki_toplam_fiyati from ekipmanlar group by Ekipman_adi 
+
+-- Örnekte group by fonksiyonu ile ekipman adı alanına göre gruplama işlemi yapılmıştır ve her grubun fiyatı ayrı olarak hesaplanmıştır.
+
+
+# SORU 16: Her bir odadaki ekipmanların değerlerini hesaplayınız? 
+
+select ekipmanlar.Oda_no ,sum (ekipmanlar.Ekipman_Adedi*ekipmanlar.Ekipman_Fiyatlari) as Odaya_gore_zimmetlenen_deger from ekipmanlar group by Oda_no 
+
+
+# SORU 17 : Kütüphanede hangi ekipmanlardan kaç adet vardır? 
+
+select ekipmanlar.Ekipman_adi , sum(ekipmanlar.Ekipman_Adedi) from ekipmanlar group by Ekipman_adi 
+
+
+# SORU 18 : Kütüphaneyi en çok ziyaret eden öğrencilerin bölümleri nelerdir?
+
+select ogrenciler.Bolum , 
+
+
+# SORU 19 : Öğrencilerin ad,soyad bilgilerini büyük harflerle giriniz?
+
+update ogrenciler set ogrenciler.Ad_Soyad =upper(ogrenciler.Ad_Soyad)
+
+/*set ifadesi ile ilgili alan seçildikten sonra upper fonksiyonu ile metin tipindeki alanda veriler büyük karaktere çevrildi.
+ * Tam tersi yani istenilen alanı küçük karaktere çevirmek istersek ise lower fonksiyonu kullanılır. 
+ Burada dikkat edilecek nokta tablomuzda ilgili alanda bulunan değerler kalıcı olarak değiştirilmiştir. */
+
+
+# SORU 20 : Hafta boyunca hangi oda hiç kiralanmamıştır? (????)
+
+select distinct oda_durumu.Oda_No,calisma_odalari.Oda_No from oda_durumu join calisma_odalari on calisma_odalari.Oda_No = oda_durumu.Oda_No where oda_durumu.Tarih<='2021-10-18' and oda_durumu.Tarih >= '2021-10-11' 
+
+# SORU 21 : Kiralanan odalar bugüne kadar kaç kere kiralanmıştır? 
+
+select oda_durumu.Oda_No ,count ( oda_durumu.Oda_No) from oda_durumu group by oda_durumu.Oda_No 
+
+# SORU 22 : 104 numaraları oda hafta boyunca kaç kere kiralanmıştır?
+
+select oda_durumu.Oda_No , count ( oda_durumu.Tarih) from oda_durumu where Oda_No='104'and Tarih<= '2021-10-18' and Tarih >='2021-10-11' 
